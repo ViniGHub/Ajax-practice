@@ -1,13 +1,17 @@
 <?php
-    header('Content-Type: application/json');
 
-    $pdo = new PDO('mysql:host=localhost; dbname=bd-comment-video;', 'root', '');
+/**
+ * @var PDO $pdo
+ */
 
-    $stmt = $pdo->prepare('SELECT * FROM comments');
-    $stmt->execute();
+header('Content-Type: application/json');
+require_once 'conexao.php';
 
-    if ($stmt->rowCount() >= 1) {
-        echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
-    } else {
-        echo json_encode('Nenhum comentário encontrado');
-    }
+$stmt = $pdo->prepare('SELECT * FROM TB_COMMENTS');
+
+
+if ($stmt->execute()) {
+    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+} else {
+    echo json_encode('Nenhum comentário encontrado');
+}

@@ -1,18 +1,19 @@
 <?php
-    header('Content-Type: application/json');
+/**
+ * @var PDO $pdo
+ */
+header('Content-Type: application/json');
+require_once 'conexao.php';
 
-    $name = $_POST['name'];
-    $comment = $_POST['comment'];
+$name = $_POST['name'];
+$comment = $_POST['comment'];
 
-    $pdo = new PDO('mysql:host=localhost; dbname=bd-comment-video;', 'root', '');
+$stmt = $pdo->prepare('INSERT INTO TB_COMMENTS (nome, comments) VALUES (:na, :co)');
+$stmt->bindValue(':na', $name);
+$stmt->bindValue(':co', $comment);
 
-    $stmt = $pdo->prepare('INSERT INTO comments (name, comment) VALUES (:na, :co)');
-    $stmt->bindValue(':na', $name);
-    $stmt->bindValue(':co', $comment);
-    $stmt->execute();
-
-    if ($stmt->rowCount() >= 1) {
-        echo json_encode('Comentário Salvo com Sucesso');
-    } else {
-        echo json_encode('Falha ao salvar comentário');
-    }
+if ($stmt->execute()) {
+    echo json_encode('Comentário Salvo com Sucesso');
+} else {
+    echo json_encode('Falha ao salvar comentário');
+}
